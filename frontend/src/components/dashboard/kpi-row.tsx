@@ -11,6 +11,7 @@ interface KPIRowProps {
 export function KPIRow({ metrics, loading }: KPIRowProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      {loading ? <span role="status" className="sr-only">Loading financial metrics.</span> : null}
       <KPICard
         label="Total Income"
         value={metrics ? formatCurrency(metrics.totalIncome) : '—'}

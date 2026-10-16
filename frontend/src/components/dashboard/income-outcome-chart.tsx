@@ -55,6 +55,7 @@ export function IncomeOutcomeChart({ data, loading }: IncomeOutcomeChartProps) {
           <Skeleton className="h-3 w-64 mt-1" />
         </CardHeader>
         <CardContent>
+          <span role="status" className="sr-only">Loading monthly income and outcome chart.</span>
           <Skeleton className="h-[280px] w-full rounded-lg" />
         </CardContent>
       </Card>
@@ -118,6 +119,25 @@ export function IncomeOutcomeChart({ data, loading }: IncomeOutcomeChartProps) {
             </LineChart>
           </ResponsiveContainer>
         )}
+        <table className="sr-only">
+          <caption>Monthly income and outcome values</caption>
+          <thead>
+            <tr>
+              <th scope="col">Month</th>
+              <th scope="col">Income</th>
+              <th scope="col">Outcome</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((point) => (
+              <tr key={point.month}>
+                <th scope="row">{point.month}</th>
+                <td>{formatCurrency(point.income)}</td>
+                <td>{formatCurrency(point.outcome)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </CardContent>
     </Card>
   )

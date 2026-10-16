@@ -56,6 +56,7 @@ export function ProfitPercentChart({ data, loading }: ProfitPercentChartProps) {
           <Skeleton className="h-3 w-64 mt-1" />
         </CardHeader>
         <CardContent>
+          <span role="status" className="sr-only">Loading monthly profit margin chart.</span>
           <Skeleton className="h-[280px] w-full rounded-lg" />
         </CardContent>
       </Card>
@@ -107,6 +108,23 @@ export function ProfitPercentChart({ data, loading }: ProfitPercentChartProps) {
             </LineChart>
           </ResponsiveContainer>
         )}
+        <table className="sr-only">
+          <caption>Monthly profit margin values</caption>
+          <thead>
+            <tr>
+              <th scope="col">Month</th>
+              <th scope="col">Profit margin</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((point) => (
+              <tr key={point.month}>
+                <th scope="row">{point.month}</th>
+                <td>{point.profitPercent.toFixed(1)}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </CardContent>
     </Card>
   )
