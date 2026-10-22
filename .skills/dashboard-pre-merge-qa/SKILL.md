@@ -30,7 +30,8 @@ Decide whether the current branch of this repo can be merged, using the checks t
    - Both charts render after their skeletons; the page does not jump when they load.
    - With the backend stopped, the red error box appears (it has `role="alert"`).
    - Tab moves through the page in visual order; chart titles are `h2` under the single `h1`.
-   If `/api` calls fail inside Compose, note it as "runtime not verified" with the reason. Never mark it as passed.
+   Known Codespaces issue: the frontend container resolves `backend` but its requests time out, so the page stays on the loading skeletons while `curl localhost:8000/api/metrics` from the host returns 200. Workaround, without committing it: in `frontend/`, create an untracked `vite.verify.config.ts` that `mergeConfig`s `./vite.config` with an `/api` proxy to `http://localhost:8000`, run `npx vite --config vite.verify.config.ts --port 5174`, check on port 5174, then stop it and delete the file. Test the error box by running `docker compose stop backend` and reloading 5174.
+   If neither route works, report "runtime not verified" with the reason. Never mark it as passed.
 6. **Repo-specific traps.** Flag any of these in the diff:
    - Next.js-only APIs (`next/image`, `next/font`, `next/dynamic`, server actions). This is React + Vite.
    - New calls to API endpoints without updating `memory-bank/` (the dashboard only consumes `/api/metrics`).

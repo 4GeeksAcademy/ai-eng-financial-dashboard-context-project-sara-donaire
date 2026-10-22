@@ -8,6 +8,10 @@ Agents working on this project **must**:
 - Look for available **agent skills** in the directory:  
   `./.agents/skills`
 
+- Look for **internal project skills** written for this repo in:  
+  `./.skills`  
+  _(run `.skills/dashboard-pre-merge-qa` before opening or updating a pull request)_
+
 - Look for the **project memory bank** in:  
   `./memory-bank`  
   _(if the directory exists)_
