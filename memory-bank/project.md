@@ -36,7 +36,7 @@ The API also exposes facets, grouped summaries, top categories, period compariso
 - FastAPI app with health and financial metrics endpoints, request filtering, summary/grouping, top-category ranking, comparison, alert detection, and business-type-specific results (`backend/app/main.py`, `backend/app/routes.py`).
 - Seeded mock movement generation and Pydantic response models (`backend/app/routes.py`).
 - Dashboard data fetch, loading/error state, KPI calculation, and monthly chart aggregation (`frontend/src/App.tsx`, `frontend/src/lib/financial-utils.ts`).
-- KPI cards and two chart views (`frontend/src/components/dashboard/`).
+- KPI cards and two chart views (`frontend/src/components/dashboard/`); the charts are lazy-loaded chunks (`frontend/src/App.tsx`).
 - Backend route tests and frontend financial utility tests (`backend/tests/test_routes.py`, `frontend/src/lib/financial-utils.test.ts`).
 - Docker Compose run instructions and test commands (`README.md`).
 
@@ -46,7 +46,7 @@ The API also exposes facets, grouped summaries, top categories, period compariso
 - The dashboard header is fixed to `2024 - Full Year`, but backend data years are determined using `date.today()` (`frontend/src/App.tsx`, `backend/app/routes.py`).
 - Analytical API endpoints beyond `/api/metrics` are not currently consumed by the dashboard (`frontend/src/App.tsx`, `backend/app/routes.py`).
 - CORS currently allows all origins, methods, and headers and enables credentials (`backend/app/main.py`); this should be reviewed before production deployment.
-- Runtime test execution has not been confirmed in the current environment. Earlier attempts reported missing Vitest and FastAPI dependencies; the available result should be rechecked when the environment changes.
+- Test execution confirmed on `feature/agent-skills`: frontend `npm test` 6 passed, backend `pytest` 16 passed, after installing dependencies (`npm install` in `frontend/`, `pip install -r requirements.txt` in `backend/`). See `memory-bank/progress.md`.
 
 ## Potential follow-up work (not a committed roadmap)
 
@@ -55,7 +55,7 @@ The following are observations and possible follow-ups inferred from the current
 - The header uses a fixed `2024 - Full Year` label while backend-generated dates depend on `date.today()` (`frontend/src/App.tsx`, `backend/app/routes.py`).
 - The API exposes analytical endpoints beyond `/api/metrics`, but the current dashboard only fetches `/api/metrics` (`backend/app/routes.py`, `frontend/src/App.tsx`).
 - CORS allows all origins, methods, and headers and enables credentials (`backend/app/main.py`); review configuration against actual deployment requirements before deployment.
-- Test execution should be repeated in an environment with dependencies installed; documented commands are in `README.md` and scripts/dependencies are listed in `frontend/package.json` and `backend/requirements.txt`.
+- Before merging, run the internal QA skill `.skills/dashboard-pre-merge-qa/SKILL.md`; documented commands are in `README.md`, `frontend/package.json` and `backend/requirements.txt`.
 
 ## Useful commands
 
