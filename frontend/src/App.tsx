@@ -1,14 +1,27 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { KPIRow } from "@/components/dashboard/kpi-row";
-import { IncomeOutcomeChart } from "@/components/dashboard/income-outcome-chart";
-import { ProfitPercentChart } from "@/components/dashboard/profit-percent-chart";
+import { ChartCardSkeleton } from "@/components/dashboard/chart-card-skeleton";
 import {
   type FinancialMovement,
   type KPIMetrics,
   type MonthlyDataPoint,
 } from "@/lib/financial-types";
 import { computeKPIs, computeMonthlyData } from "@/lib/financial-utils";
+
+// vercel-react-best-practices: bundle-dynamic-imports. Recharts is the heaviest
+// dependency, so the charts load as separate chunks (React.lazy is the Vite
+// equivalent of next/dynamic) and the KPIs render without waiting for them.
+const IncomeOutcomeChart = lazy(() =>
+  import("@/components/dashboard/income-outcome-chart").then((m) => ({
+    default: m.IncomeOutcomeChart,
+  })),
+);
+const ProfitPercentChart = lazy(() =>
+  import("@/components/dashboard/profit-percent-chart").then((m) => ({
+    default: m.ProfitPercentChart,
+  })),
+);
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
@@ -34,7 +47,7 @@ function App() {
       })
       .catch(() => {
         setError(
-          "No se pudo cargar la informacion financiera. Revisa la API de backend.",
+          "Could not load financial data. Check that the backend API is running.",
         );
       })
       .finally(() => {
@@ -49,7 +62,7 @@ function App() {
           <DashboardHeader period="2024 - Full Year" />
 
           {error ? (
-            <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
+            <div role="alert" className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
               {error}
             </div>
           ) : null}
@@ -62,8 +75,20 @@ function App() {
             aria-label="Financial charts"
             className="grid grid-cols-1 gap-4 xl:grid-cols-2"
           >
-            <IncomeOutcomeChart data={monthlyData} loading={loading} />
-            <ProfitPercentChart data={monthlyData} loading={loading} />
+            <Suspense
+              fallback={
+                <ChartCardSkeleton statusLabel="Loading monthly income and outcome chart." />
+              }
+            >
+              <IncomeOutcomeChart data={monthlyData} loading={loading} />
+            </Suspense>
+            <Suspense
+              fallback={
+                <ChartCardSkeleton statusLabel="Loading monthly profit margin chart." />
+              }
+            >
+              <ProfitPercentChart data={monthlyData} loading={loading} />
+            </Suspense>
           </section>
         </div>
       </div>

@@ -1,0 +1,4 @@
+# seo skill (Crawlability > robots.txt): internal financial dashboard.
+# Nothing here should be crawled or indexed, including /api/.
+User-agent: *
+Disallow: /

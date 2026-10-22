@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
+import { ChartCardSkeleton } from './chart-card-skeleton'
 import { type MonthlyDataPoint } from '@/lib/financial-types'
 import { formatCurrency } from '@/lib/financial-utils'
 import {
@@ -48,17 +48,7 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
 
 export function IncomeOutcomeChart({ data, loading }: IncomeOutcomeChartProps) {
   if (loading) {
-    return (
-      <Card className="border-border/60">
-        <CardHeader className="pb-4">
-          <Skeleton className="h-5 w-52" />
-          <Skeleton className="h-3 w-64 mt-1" />
-        </CardHeader>
-        <CardContent>
-          <Skeleton className="h-[280px] w-full rounded-lg" />
-        </CardContent>
-      </Card>
-    )
+    return <ChartCardSkeleton statusLabel="Loading monthly income and outcome chart." />
   }
 
   const hasData = data.some((d) => d.income > 0 || d.outcome > 0)
@@ -118,6 +108,25 @@ export function IncomeOutcomeChart({ data, loading }: IncomeOutcomeChartProps) {
             </LineChart>
           </ResponsiveContainer>
         )}
+        <table className="sr-only">
+          <caption>Monthly income and outcome values</caption>
+          <thead>
+            <tr>
+              <th scope="col">Month</th>
+              <th scope="col">Income</th>
+              <th scope="col">Outcome</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((point) => (
+              <tr key={point.month}>
+                <th scope="row">{point.month}</th>
+                <td>{formatCurrency(point.income)}</td>
+                <td>{formatCurrency(point.outcome)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </CardContent>
     </Card>
   )
